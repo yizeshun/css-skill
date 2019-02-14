@@ -1,0 +1,42 @@
+问题：
+  card的高度由内容填充,当浏览器窗口大小变化时,card的高度也随窗口变化，但是card的内容区域并不能相应作出改变,
+  因此内容区域中包含的展示内容也不能随窗口改变而改变
+  
+解决办法:
+  card的高度设置为100%,将要展示的内容放在一个容器中,该容器的高度通过计算设置
+  当window的resize事件触发时, 在回调函数中获取card的高度记为cardHeight,
+  card的头一般为固定高度记为cardHeader
+  则内容的高度contentHeight = cardHeight - cardHeader - padding
+  然后获取card中包裹内容的容器元素,设置其高度
+
+以ant-design为例
+<nz-card  nzTitle="title" class="flex-col" style="background-color: #bbabab;height: 100%">
+    <div class="card-content">
+        <div style="height: 100%;background-color: white">content</div>
+    </div>
+</nz-card>
+以上card设置了height 100%
+当改变窗口大小时,card的高度会随之改变,但是展示的内容content的高度并不会改变而是由字体大小决定
+这里在控制器中获取nz-card的高度,减去card头和padding就可以设置类为card-content容器的高度,至于
+这些操作都在window的resize事件中进行。这样就可以实现窗口变化,展示的内容区域随之改变。
+ngOnInit() {
+        $(window).on('resize.TestFlexComponent', () => {
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(() => {
+                this.resize();
+            }, 100);
+        });
+    }
+    resize() {
+        const nzCards = this.$elem.find('nz-card');
+        nzCards.each((i, e) => {
+            const cardHeight = $(e).height();
+            const cardContent = $(e).find('.card-content');
+            const contentHeight = cardHeight - 56 - 48;
+            cardContent.animate({'height': contentHeight});
+        });
+    }
+
+  
