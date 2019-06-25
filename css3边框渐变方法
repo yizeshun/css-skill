@@ -1,0 +1,5 @@
+涉及两个border属性border、border-image,一个线性渐变linear-gradient
+具体方法
+  border 1px solid transparent
+  border-image linear-gradient(to bottom ,#000000, #ffffff, #000000) 0 1
+关于border-image的详细知识，参考https://blog.csdn.net/huhaha24/article/details/81059484
